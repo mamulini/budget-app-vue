@@ -3,7 +3,7 @@
     v-if="show"
     :categories="incomeCategories"
     :close-modal="closeModal"
-    :add-trans="addTrans"
+    :add-transaction="addIncomeTransaction"
   />
 </template>
 
@@ -27,16 +27,14 @@ export default {
     ...mapGetters(['incomeCategories'])
   },
   methods: {
-    ...mapActions(['addTransaction', 'addHryvnia']),
+    ...mapActions(['addTransaction', 'addHryvnia', 'addBalance']),
     closeModal() {
       this.show = false;
-      // document.querySelector('body').classList.remove('overflow-hidden');
     },
     openModal() {
       this.show = true;
-      // document.querySelector('body').classList.add('overflow-hidden');
     },
-    addTrans(data) {
+    addIncomeTransaction(data) {
       data.amount = +data.amount;
       if (data.amount <= 0) {
         alert('Please type the correct amount of transaction!');
@@ -45,7 +43,7 @@ export default {
       data.id = v1();
       data.name = this.name;
       this.addTransaction(data);
-      this.addHryvnia(data.amount);
+      this.addBalance(data);
       this.closeModal();
     }
   }

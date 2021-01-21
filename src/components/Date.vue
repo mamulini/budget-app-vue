@@ -7,9 +7,8 @@
       valueType="format"
       :show-second="false"
       :show-time-header="true"
-      @confirm="pickDate()"
-      confirm
-    ></DatePicker>
+      @change="pickDate()"
+    />
   </div>
 </template>
 
@@ -18,18 +17,45 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 
 export default {
+  name: 'Date',
   components: { DatePicker },
+  props: {
+    date: String
+  },
   data() {
     return {
-      time: null
+      time: ''
     };
   },
   methods: {
     pickDate() {
-      this.$emit('pick-date', this.time);
+      if (!this.time) {
+        this.time = new Date().toJSON().slice(0, 10);
+        this.$emit('pick-date', this.time);
+      } else {
+        this.$emit('pick-date', this.time);
+      }
     }
+  },
+  beforeDestroy() {
+    this.pickDate();
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.mx-input-wrapper {
+  display: flex;
+  justify-content: start;
+  width: 125px;
+}
+
+.mx-input {
+  height: 28px;
+  width: 100%;
+}
+
+.mx-icon-calendar {
+  right: 10px;
+}
+</style>

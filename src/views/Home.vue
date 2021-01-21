@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <Balance />
+  <div class="homepage">
+    <Balance :uah="hryvnia" :usd="dolar" :eur="euro" />
     <ActivityList />
   </div>
 </template>
@@ -8,22 +8,25 @@
 <script>
 import Balance from '../components/Balance';
 import ActivityList from '../components/ActivityList';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
     Balance,
     ActivityList
   },
-  computed: {},
-  methods: {}
+  computed: {
+    ...mapGetters(['hryvnia', 'dolar', 'euro'])
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.home {
-  background: #edf5e1;
-  color: #05386b;
+.homepage {
+  background: var(--white-primary);
+  color: var(--blue-primary);
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -36,11 +36,14 @@ export default new Vuex.Store({
         { name: 'Car', id: 9 },
         { name: 'Other', id: 10 }
       ]
-    }
+    },
   },
   plugins: [createPersistedState()],
   getters: {
     hryvnia: ({ balance }) => `${balance.hryvnia}  UAH`,
+    dolar: ({ balance }) => `${balance.dolar}  USD`,
+    euro: ({ balance }) => `${balance.euro}  EUR`,
+    balance: ({ balance }) => balance,
     incomeTransactions: ({ transactions }) => transactions.income.reverse(),
     expenseTransactions: ({ transactions }) => transactions.expense.reverse(),
     incomeCategories: ({ categories }) => categories.income,
@@ -57,40 +60,88 @@ export default new Vuex.Store({
       }
     },
     delete_transaction({ transactions, balance }, trans) {
-      const realy = confirm("Are you sure?")
-      if (!realy) return;
+      const confirmDelete = confirm("Are you sure?")
+      if (!confirmDelete) return;
 
       if (trans.name === "income") {
-        balance.hryvnia -= trans.amount;
+        switch (trans.currency) {
+          case 'uah':
+            balance.hryvnia -= trans.amount;
+            break;
+          case 'usd':
+            balance.dolar -= trans.amount;
+            break;
+          case 'euro':
+            balance.euro -= trans.amount;
+            break;
+          default:
+            return;
+        }
         transactions.income = transactions.income.filter(item => item.id !== trans.id);
 
       } else if (trans.name === "expense") {
-        balance.hryvnia += trans.amount;
+        switch (trans.currency) {
+          case 'uah':
+            balance.hryvnia += trans.amount;
+            break;
+          case 'usd':
+            balance.dolar += trans.amount;
+            break;
+          case 'euro':
+            balance.euro += trans.amount;
+            break;
+          default:
+            return;
+        }
         transactions.expense = transactions.expense.filter(item => item.id !== trans.id);
       } else {
         return;
       }
     },
-    add_hryvnia({ balance }, amount) {
-      balance.hryvnia += amount;
+    add_balance({ balance }, transaction) {
+      switch (transaction.currency) {
+        case 'uah':
+          balance.hryvnia += transaction.amount;
+          break;
+        case 'usd':
+          balance.dolar += transaction.amount;
+          break;
+        case 'euro':
+          balance.euro += transaction.amount;
+          break;
+        default:
+          return;
+      }
     },
-    reduce_hryvnia({ balance }, amount) {
-      balance.hryvnia -= amount;
+    reduce_balance({ balance }, transaction) {
+      switch (transaction.currency) {
+        case 'uah':
+          balance.hryvnia -= transaction.amount;
+          break;
+        case 'usd':
+          balance.dolar -= transaction.amount;
+          break;
+        case 'euro':
+          balance.euro -= transaction.amount;
+          break;
+        default:
+          return;
+      }
     },
   },
   actions: {
-    addTransaction({ commit }, trans) {
-      commit('add_transaction', trans)
+    addTransaction({ commit }, transaction) {
+      commit('add_transaction', transaction)
     },
-    deleteTransaction({ commit }, trans) {
-      commit('delete_transaction', trans);
+    deleteTransaction({ commit }, transaction) {
+      commit('delete_transaction', transaction);
     },
-    addHryvnia({ commit }, amount) {
-      commit("add_hryvnia", amount);
+    addBalance({ commit }, transaction) {
+      commit('add_balance', transaction);
     },
-    reduceHryvnia({ commit }, amount) {
-      commit('reduce_hryvnia', amount);
-    }
+    reduceBalance({ commit }, transaction) {
+      commit('reduce_balance', transaction);
+    },
   },
   modules: {}
 });

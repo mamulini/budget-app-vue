@@ -1,10 +1,10 @@
 <template>
   <div class="activity">
-    <div class="activity__income">
-      <h3>Income activities</h3>
-      <div v-if="incomeTransactions.length === 0">
+    <div class="activity__wrapper">
+      <h3 class="activity__title">Income activities</h3>
+      <p class="activity__subtitle" v-if="incomeTransactions.length === 0">
         There are no income transactions!
-      </div>
+      </p>
 
       <ActivityItem
         v-for="trans in incomeTransactions"
@@ -13,11 +13,11 @@
         :categories="incomeCategories"
       />
     </div>
-    <div class="activity__expense">
-      <h3>Expense activities</h3>
-      <div v-if="expenseTransactions.length === 0">
+    <div class="activity__wrapper">
+      <h3 class="activity__title">Expense activities</h3>
+      <p class="activity__subtitle" v-if="expenseTransactions.length === 0">
         There are no expense transactions!
-      </div>
+      </p>
       <ActivityItem
         v-for="trans in expenseTransactions"
         :key="trans.id"
@@ -50,15 +50,34 @@ export default {
 
 <style lang="scss" scoped>
 .activity {
-  background: #5cd895;
-  color: #ffffff;
-  width: 80%;
-  margin: 0 auto;
+  background: var(--lightGreen);
+  color: var(--blue-primary);
+  width: 900px;
+  margin: 0 auto 180px auto;
   border-radius: 10px;
 
-  &__expense,
-  &__income {
+  @media screen and (max-width: 940px) {
+    width: 90%;
+    min-width: 320px;
+  }
+
+  @media screen and (max-width: 540px) {
+    width: 98%;
+  }
+
+  &__wrapper {
     min-height: 100px;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: 10px;
+  }
+
+  &__subtitle {
+    padding-top: 10px;
   }
 }
 </style>

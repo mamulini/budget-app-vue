@@ -3,24 +3,28 @@
     <div class="modal">
       <div class="modal__backdrop" @click="closeModal()" />
       <div class="modal__dialog">
-        <div class="amount">
-          <h3>Amount</h3>
-          <input
-            v-model="transaction.amount"
-            type="number"
-            class="input"
-            placeholder="Insert number"
-          />
+        <div class="modal__currency">
+          <h3>Currency</h3>
+          <select v-model="transaction.currency">
+            <option value="uah">UAH</option>
+            <option value="usd">USD</option>
+            <option value="euro">EUR</option>
+          </select>
         </div>
-        <div>
+        <div class="modal__amount">
+          <div>
+            <h3>Amount</h3>
+            <input
+              v-model="transaction.amount"
+              type="number"
+              class="input"
+              placeholder="Insert number"
+            />
+          </div>
+        </div>
+        <div class="modal__category">
           <h3>Choose category</h3>
-          <select
-            class="input select"
-            v-model="transaction.selectedCategory"
-            tabindex="-1"
-            aria-hidden="true"
-            placeholder="transaction.selectedCategory"
-          >
+          <select v-model="transaction.selectedCategory">
             <option
               v-for="category in categories"
               :value="category.name"
@@ -29,22 +33,30 @@
             >
           </select>
         </div>
-        <div>
+        <div class="modal__desc">
           <h3>Description</h3>
           <input
-            class="input"
             type="text"
             v-model="transaction.desc"
             placeholder="Type note"
+            maxlength="40"
           />
         </div>
-        <div>
+        <div class="modal__date">
           <h3>Choose Date</h3>
           <Date @pick-date="addDate" />
         </div>
-        <div class="buttons">
-          <button type="button" @click="closeModal()">Cancel</button>
-          <button type="button" @click="addTrans(transaction)">Save</button>
+        <div class="modal__button-wrapper">
+          <button class="modal__button" type="button" @click="closeModal()">
+            Cancel
+          </button>
+          <button
+            class="modal__button"
+            type="button"
+            @click="addTransaction(transaction)"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -62,7 +74,7 @@ export default {
   props: {
     categories: Array,
     closeModal: Function,
-    addTrans: Function
+    addTransaction: Function
   },
   data() {
     return {
@@ -70,6 +82,7 @@ export default {
         selectedCategory: 'Other',
         desc: '',
         amount: null,
+        currency: 'uah',
         date: null
       }
     };
@@ -98,7 +111,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
   }
   &__dialog {
@@ -111,42 +124,31 @@ export default {
     display: flex;
     flex-direction: column;
     z-index: 2;
-    @media screen and (max-width: 992px) {
+    @media screen and (max-width: 540px) {
       width: 90%;
     }
   }
-}
 
-div {
-  padding: 10px;
-}
-
-.input {
-  /* width: 100%; */
-  height: 34px;
-  padding: 6px;
-  margin-top: 5px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #555;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-
-  &:hover,
-  &:focus {
-    border-color: #409aff;
+  &__button-wrapper {
+    display: flex;
+    justify-content: center;
   }
 
-  &:focus {
-    outline: none;
+  &__button {
+    margin: 0 10px;
   }
-}
 
-.select {
-  padding: 0;
+  &__date {
+    position: relative;
+    div {
+      position: relative;
+      left: 40px;
+    }
+  }
+
+  div {
+    padding-top: 10px;
+  }
 }
 
 .fade-enter-active,
@@ -157,24 +159,4 @@ div {
 .fade-leave-to {
   opacity: 0;
 }
-
-/* {
-  <div class="modal__header">
-                    <slot name="header" />
-                    <button
-                        type="button"
-                        class="modal__close"
-                        @click="closeModal()"
-                    >
-                        x
-                    </button>
-                </div>
-
-                <div class="modal__body">
-                    <slot name="body" />
-                </div>
-
-                <div class="modal__footer">
-                    <slot name="footer" />
-                </div>} */
 </style>

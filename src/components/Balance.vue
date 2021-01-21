@@ -1,11 +1,23 @@
 <template>
   <div class="balance">
-    <h2 class="balance__title">Cash: {{ hryvnia }}</h2>
+    <div class="balance__amount-wrapper">
+      <h2 v-if="amount === usd" class="balance__amount">{{ usd }}</h2>
+      <h2 v-else-if="amount === eur" class="balance__amount">{{ eur }}</h2>
+      <h2 v-else class="balance__amount">{{ uah }}</h2>
+      <div class="balance__select-wrapper">
+        <h3 class="balance__select-title">Select Currency</h3>
+        <select class="balance__select" v-model="amount" placeholder="UAH">
+          <option :value="uah" :key="uah">UAH</option>
+          <option :value="usd" :key="usd">USD</option>
+          <option :value="eur" :key="eur">EUR</option>
+        </select>
+      </div>
+    </div>
     <div class="balance__buttons-wrapper">
-      <button @click="$refs.IncomeModal.openModal()" class="balance__btn">
+      <button @click="$refs.IncomeModal.openModal()" class="balance__button">
         Add Income
       </button>
-      <button @click="$refs.expenseModal.openModal()" class="balance__btn">
+      <button @click="$refs.expenseModal.openModal()" class="balance__button">
         Add Expense
       </button>
     </div>
@@ -19,64 +31,64 @@
 <script>
 import Income from './Income';
 import Expense from './Expense';
-import { mapGetters } from 'vuex';
 
 export default {
-  name: 'balance',
+  name: 'Balance',
   components: {
     Income,
     Expense
   },
-  computed: {
-    ...mapGetters(['hryvnia'])
+  props: {
+    uah: String,
+    usd: String,
+    eur: String
   },
-  methods: {
-    cons() {
-      console.log(this.hryvnia);
-    }
-    //   closeModal() {
-    //     this.show = false;
-    //     document.querySelector('body').classList.remove('overflow-hidden');
-    //   },
-    //   openModal() {
-    //     this.show = true;
-    //     document.querySelector('body').classList.add('overflow-hidden');
-    //   }
+  data() {
+    return {
+      amount: this.uah
+    };
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .balance {
-  background: #edf5e1;
-  color: #05386b;
-  margin-bottom: 50px;
+  background: var(--white-primary);
+  color: var(--blue-primary);
+  margin-bottom: 20px;
 
-  &__title {
-    padding: 20px;
-  }
-  &__btn {
-    box-shadow: inset 0px 1px 3px 0px #3dc21b;
-    background: linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
-    background-color: #44c767;
-    border-radius: 5px;
-    border: 1px solid #18ab29;
-    cursor: pointer;
-    color: #ffffff;
-    font-size: 16px;
-    padding: 11px 23px;
-    text-shadow: 0px -1px 0px #2f6627;
-    margin: 10px;
-  }
-
-  &__btn:hover {
-    background: linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
-    background-color: #5cbf2a;
-  }
-
-  &__btn:active {
+  &__amount-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
     position: relative;
-    top: 1px;
+  }
+
+  &__select-wrapper {
+    position: absolute;
+    right: 30px;
+    margin-top: 20px;
+
+    @media screen and (max-width: 720px) {
+      margin-top: -10px;
+      right: 10px;
+    }
+  }
+
+  &__select-title {
+    @media screen and (max-width: 720px) {
+      font-size: 16px;
+    }
+  }
+
+  &__select {
+    margin: 0;
+  }
+
+  &__button {
+    font-size: 16px;
+    margin: 10px;
   }
 }
 </style>
