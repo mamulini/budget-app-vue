@@ -1,6 +1,12 @@
 <template>
   <div class="balance">
     <div class="balance__amount-wrapper">
+      <div class="balance__total">
+        <button @click="getTotalSum()">
+          {{ showTotal ? 'Hide Total' : 'Show Total' }}
+        </button>
+        <h4 v-if="showTotal">{{ totalSum }} UAH</h4>
+      </div>
       <h2 v-if="amount === usd" class="balance__amount">{{ usd }}</h2>
       <h2 v-else-if="amount === eur" class="balance__amount">{{ eur }}</h2>
       <h2 v-else class="balance__amount">{{ uah }}</h2>
@@ -31,6 +37,7 @@
 <script>
 import Income from './Income';
 import Expense from './Expense';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Balance',
@@ -45,8 +52,27 @@ export default {
   },
   data() {
     return {
-      amount: this.uah
+      amount: this.uah,
+      showTotal: false
     };
+  },
+  computed: {
+    ...mapGetters(['exchangeRates', 'totalSum', 'balance'])
+  },
+  methods: {
+    ...mapActions(['addTotalSum']),
+    getTotalSum() {
+      let sum = this.balance.hryvnia;
+      this.exchangeRates.forEach(item => {
+        if (item.cc === 'USD') {
+          sum += this.balance.dolar * item.rate;
+        } else {
+          sum += this.balance.euro * item.rate;
+        }
+      });
+      this.showTotal = !this.showTotal;
+      this.addTotalSum(sum.toFixed(2));
+    }
   }
 };
 </script>
@@ -76,6 +102,10 @@ export default {
     }
   }
 
+  &__buttons-wrapper {
+    margin-top: 15px;
+  }
+
   &__select-title {
     @media screen and (max-width: 720px) {
       font-size: 16px;
@@ -89,6 +119,29 @@ export default {
   &__button {
     font-size: 16px;
     margin: 10px;
+  }
+
+  &__total {
+    position: absolute;
+    left: 10px;
+    margin-top: 20px;
+
+    button {
+      background-color: var(--lightGreen);
+      margin-bottom: 5px;
+      border: 1px solid transparent;
+
+      &:hover {
+        background-color: var(--white-primary);
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+      }
+    }
+
+    @media screen and (max-width: 720px) {
+      margin-top: -10px;
+      left: 10px;
+    }
   }
 }
 </style>

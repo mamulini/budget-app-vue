@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Header from './components/Header';
 import Home from './views/Home';
 
@@ -14,6 +15,12 @@ export default {
   components: {
     Header,
     Home
+  },
+  methods: {
+    ...mapActions(['addExchangeRates'])
+  },
+  created() {
+    this.addExchangeRates();
   }
 };
 </script>

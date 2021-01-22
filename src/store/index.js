@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import axios from 'axios';
 
 
 Vue.use(Vuex);
@@ -11,7 +12,9 @@ export default new Vuex.Store({
       hryvnia: 0,
       dolar: 0,
       euro: 0,
+      totalSum: 0
     },
+    exchangeRates: [],
     transactions: {
       income: [],
       expense: []
@@ -43,6 +46,8 @@ export default new Vuex.Store({
     hryvnia: ({ balance }) => `${balance.hryvnia}  UAH`,
     dolar: ({ balance }) => `${balance.dolar}  USD`,
     euro: ({ balance }) => `${balance.euro}  EUR`,
+    totalSum: ({ balance }) => balance.totalSum,
+    exchangeRates: ({ exchangeRates }) => exchangeRates,
     balance: ({ balance }) => balance,
     incomeTransactions: ({ transactions }) => transactions.income.reverse(),
     expenseTransactions: ({ transactions }) => transactions.expense.reverse(),
@@ -50,6 +55,14 @@ export default new Vuex.Store({
     expenseCategories: ({ categories }) => categories.expense,
   },
   mutations: {
+    add_exchangeRates(state, exchangeRates) {
+      state.exchangeRates = exchangeRates.filter(item => {
+        return item.cc === 'USD' || item.cc === 'EUR';
+      });
+    },
+    add_totalSum({ balance }, total) {
+      balance.totalSum = total;
+    },
     add_transaction({ transactions }, trans) {
       if (trans.name === "income" && trans.amount >= 0) {
         transactions.income.push(trans);
@@ -130,6 +143,16 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    addExchangeRates({ commit }) {
+      axios.get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json').then(result => {
+        commit('add_exchangeRates', result.data);
+      }).catch(error => {
+        throw new Error(`API ${error}`);
+      })
+    },
+    addTotalSum({ commit }, total) {
+      commit('add_totalSum', total);
+    },
     addTransaction({ commit }, transaction) {
       commit('add_transaction', transaction)
     },
