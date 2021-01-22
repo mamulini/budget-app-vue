@@ -6,7 +6,7 @@
         There are no income transactions!
       </p>
 
-      <ActivityItem
+      <ActivityListItem
         v-for="trans in incomeTransactions"
         :key="trans.id"
         :transaction="trans"
@@ -18,7 +18,7 @@
       <p class="activity__subtitle" v-if="expenseTransactions.length === 0">
         There are no expense transactions!
       </p>
-      <ActivityItem
+      <ActivityListItem
         v-for="trans in expenseTransactions"
         :key="trans.id"
         :transaction="trans"
@@ -30,11 +30,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ActivityItem from './ActivityItem.vue';
+import ActivityListItem from './ActivityListItem.vue';
 
 export default {
   components: {
-    ActivityItem
+    ActivityListItem
   },
   computed: {
     ...mapGetters([
@@ -43,8 +43,7 @@ export default {
       'expenseCategories',
       'incomeCategories'
     ])
-  },
-  methods: {}
+  }
 };
 </script>
 

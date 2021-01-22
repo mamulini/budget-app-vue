@@ -64,6 +64,7 @@ import Date from './Date';
 import { mapActions } from 'vuex';
 
 export default {
+  name: 'ActivityListItem',
   components: {
     Date
   },

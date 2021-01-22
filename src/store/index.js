@@ -33,7 +33,7 @@ export default new Vuex.Store({
         { name: 'Sport', id: 6 },
         { name: 'Shopping', id: 7 },
         { name: 'Music', id: 8 },
-        { name: 'Car', id: 9 },
+        { name: 'Gasoline', id: 9 },
         { name: 'Other', id: 10 }
       ]
     },
@@ -143,5 +143,4 @@ export default new Vuex.Store({
       commit('reduce_balance', transaction);
     },
   },
-  modules: {}
 });
