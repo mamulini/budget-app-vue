@@ -1,4 +1,5 @@
 # vue-budget-app
+new changes from other dev
 
 Live page: https://budget-app-vue.netlify.app/
 
