@@ -1,6 +1,5 @@
 # vue-budget-app
-new changes from other dev
-
+another fucking cool changes
 Live page: https://budget-app-vue.netlify.app/
 
 ## Project setup
